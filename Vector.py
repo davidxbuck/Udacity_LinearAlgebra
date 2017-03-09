@@ -10,7 +10,7 @@ class Vector(object):
         try:
             if not coordinates:
                 raise ValueError
-            self.coordinates = tuple(coordinates)
+            self.coordinates = tuple([Decimal(x) for x in coordinates])
             self.dimension = len(coordinates)
         
         except ValueError:
@@ -28,31 +28,40 @@ class Vector(object):
         return Vector(new_coordinates)
     
     def scalar_multiple(self,c):
-        new_coordinates = [x*c for x in self.coordinates]
+        new_coordinates = [x*Decimal(c) for x in self.coordinates]
         return Vector(new_coordinates)
     
     def magnitude(self):
-        magnitude = (sum(x**2 for x in self.coordinates))**.5
+        magnitude = (sum(x**Decimal(2) for x in self.coordinates))**Decimal(.5)
         return (magnitude)
     
     def normalized(self):
         try:
-            direction = self.scalar_multiple(1./self.magnitude())
+            direction = self.scalar_multiple(Decimal('1.0')/self.magnitude())
             return (direction)
         
         except ZeroDivisionError:
             raise Exception('cannot normalize the zero vector')
         
     def dot_product(self,v):
-        dotp = sum([x*y for x,y in zip(self.coordinates, v.coordinates)])
-        return (dotp)
+        return (sum([x*y for x,y in zip(self.coordinates, v.coordinates)]))
     
-    def angle(self,v):
-        xmag = self.magnitude()
-        ymag = v.magnitude()
-        angle = math.acos(self.dot_product(v)/(xmag*ymag))
-        return (angle, math.degrees(angle))
-            
+    def angle(self,v,in_degrees=False):
+        try:
+            xmag = self.magnitude()
+            ymag = v.magnitude()
+            angle = math.acos(self.dot_product(v)/(xmag*ymag))
+            if in_degrees:
+                return (math.degrees(angle))
+            else:
+                return (angle)
+        
+        except Exception as e:
+            if str(e) ==self.CANNOT_NORMALIZE_ZERO_VECTOR_MSG:
+                raise Exception('cannot compute an angle with the zero vector')
+            else:
+                raise e
+        
     def __str__(self):
         return 'Vector: {}'.format(self.coordinates)
     
@@ -60,7 +69,10 @@ class Vector(object):
         return self.coordinates == v.coordinates
     
 import math
+from decimal import Decimal, getcontext
     
+getcontext().prec = 30
+
 vec1a = Vector([8.218, -9.341])
 vec1b = Vector([-1.129, 2.111])
 vec2a = Vector([7.119, 8.215])
@@ -92,4 +104,4 @@ vec8b = Vector([2.751, 8.259, 3.985])
 print(vec5a.dot_product(vec5b))
 print(vec6a.dot_product(vec6b))
 print(vec7a.angle(vec7b))
-print(vec8a.angle(vec8b))
+print(vec8a.angle(vec8b,in_degrees=True))
