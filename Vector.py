@@ -63,7 +63,7 @@ class Vector(object):
                 raise e
                 
     def check_zero(self, tolerance = 1e-10):
-        return(abs(sum(x for x in self.coordinates)) < tolerance)
+        return(self.magnitude() < tolerance)
     
     def check_parallel(self,v):
         if self.magnitude() == 0 or v.magnitude() == 0 or self.angle(v) == 0 or self.angle(v) == math.pi :
