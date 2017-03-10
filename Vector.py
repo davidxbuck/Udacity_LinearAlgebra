@@ -46,6 +46,29 @@ class Vector(object):
     def dot_product(self,v):
         return (sum([x*y for x,y in zip(self.coordinates, v.coordinates)]))
     
+    def cross_product(self,v):
+        try:
+            x = self.coordinates[1]*v.coordinates[2] - v.coordinates[1]*self.coordinates[2]
+            y = self.coordinates[2]*v.coordinates[0] - v.coordinates[2]*self.coordinates[0]
+            z = self.coordinates[0]*v.coordinates[1] - v.coordinates[0]*self.coordinates[1]
+            return (Vector([x, y, z]))
+        
+        except ValueError as e:
+            msg=str(e)
+            if msg == 'need more than 2 values to unpack':
+                self_embedded_in_R3 = Vector(self.coordinates + ('0',))
+                v_embedded_in_R3 = Vector(v.coordinates + ('0',))
+                return self_embedded_in_R3.cross(v_embedded_in_R3)
+            elif (msg == 'too many values to unpack' or
+                  msg == 'need more than 1 value to unpack'):
+                raise Exception(self.ONLY_DEFINED_IN_TWO_THREE_DIMS_MSG)
+            else:
+                raise (e)
+    
+    def area_parallelogram(self,v):
+        xp = v.cross_product(self)
+        return (xp.magnitude())
+    
     def angle(self,v,in_degrees=False):
         try:
             xmag = self.magnitude()
@@ -171,3 +194,14 @@ print ('\ne',vecev.component_orthogonal_to(vecee))
 vecfe = vecfv.component_parallel_to(vecfb)
 print ('\nfp',vecfe)
 print ('\nfo',vecfv.component_orthogonal_to(vecfe))
+
+vecgv = Vector([8.462, 7.893, -8.187])
+vecgw = Vector([6.984, -5.975, 4.778])
+vechv = Vector([-8.987, -9.838, 5.031])
+vechw = Vector([-4.268, -1.861, -8.866])
+veciv = Vector([1.5, 9.547, 3.691])
+veciw = Vector([-6.007, 0.124, 5.772])
+
+print ('\ng',vecgv.cross_product(vecgw))
+print ('\nh',vechv.area_parallelogram(vechw))
+print ('\ni',veciv.area_parallelogram(veciw)/Decimal('2'))
