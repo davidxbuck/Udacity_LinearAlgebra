@@ -77,6 +77,29 @@ class Vector(object):
         else:
             return(False)
         
+    def component_parallel_to (self, basis):
+        try:
+            ub = basis.normalized()
+            weight = self.dot_product(ub)
+            return (ub.scalar_multiple(weight))
+        
+        except Exception as e:
+            if str(e) == self.CANNOT_NORMALIZE_ZERO_VECTOR_MSG:
+                raise Exception(self.NO_UNIQUE_PARALLEL_COMPONENT_MSG)
+            else:
+                raise e
+                
+    def component_orthogonal_to (self, basis):
+        try:
+            projection = self.component_parallel_to(basis)
+            return (self.minus(projection))
+        
+        except Exception as e:
+            if str(e) == self.NO_UNIQUE_PARALLEL_COMPONENT_MSG:
+                raise Exception(self.NO_UNIQUE_ORTHOGONAL_COMPONENT_MSG)
+            else:
+                raise e      
+        
     def __str__(self):
         return 'Vector: {}'.format(self.coordinates)
     
@@ -96,18 +119,18 @@ vec3a = Vector([1.671, -1.012, -0.318])
 sca3a = 7.41
 
 print ('1a',vec1a.plus(vec1b))
-print ('2a',vec2a.minus(vec2b))
-print ('3a',vec3a.scalar_multiple(sca3a))
+print ('\n2a',vec2a.minus(vec2b))
+print ('\n3a',vec3a.scalar_multiple(sca3a))
         
 vec4a = Vector([-0.221, 7.437])
 vec4b = Vector([8.813, -1.331, -6.247])
 vec4c = Vector([5.581, -2.136])
 vec4d = Vector([1.996, 3.108, -4.554])
 
-print('4a',vec4a.magnitude())
-print('4b',vec4b.magnitude())
-print('4c',vec4c.normalized())
-print('4d',vec4d.normalized())
+print('\n4a',vec4a.magnitude())
+print('\n4b',vec4b.magnitude())
+print('\n4c',vec4c.normalized())
+print('\n4d',vec4d.normalized())
 vec5a = Vector([7.887, 4.138])
 vec5b = Vector([-8.802, 6.776])
 vec6a = Vector([-5.955, -4.904, -1.874])
@@ -116,10 +139,10 @@ vec7a = Vector([3.183, -7.627])
 vec7b = Vector([-2.668, 5.319])
 vec8a = Vector([7.35, 0.221, 5.188])
 vec8b = Vector([2.751, 8.259, 3.985])
-print('5a',vec5a.dot_product(vec5b))
-print('6a',vec6a.dot_product(vec6b))
-print('7a',vec7a.angle(vec7b))
-print('8a',vec8a.angle(vec8b,in_degrees=True))
+print('\n5a',vec5a.dot_product(vec5b))
+print('\n6a',vec6a.dot_product(vec6b))
+print('\n7a',vec7a.angle(vec7b))
+print('\n8a',vec8a.angle(vec8b,in_degrees=True))
 
 vec9a = Vector([-7.579, -7.88])
 vec9b = Vector([22.737, 23.64])
@@ -130,7 +153,21 @@ vecbb = Vector([-1.821, 1.072, -2.94])
 vecca = Vector([2.118, 4.827])
 veccb = Vector([0, 0])
 
-print ('9a',vec9a.check_parallel(vec9b), vec9a.check_orthogonal(vec9b))
-print ('aa',vecaa.check_parallel(vecab), vecaa.check_orthogonal(vecab))
-print ('ba',vecba.check_parallel(vecbb), vecba.check_orthogonal(vecbb))
-print ('ca',vecca.check_parallel(veccb), vecca.check_orthogonal(veccb))
+print ('\n9a',vec9a.check_parallel(vec9b), vec9a.check_orthogonal(vec9b))
+print ('\naa',vecaa.check_parallel(vecab), vecaa.check_orthogonal(vecab))
+print ('\nba',vecba.check_parallel(vecbb), vecba.check_orthogonal(vecbb))
+print ('\nca',vecca.check_parallel(veccb), vecca.check_orthogonal(veccb))
+
+vecdv = Vector([3.039, 1.879])
+vecdb = Vector([0.825, 2.036])
+vecev = Vector([-9.88, -3.264, -8.159])
+veceb = Vector([-2.155, -9.353, -9.473])
+vecfv = Vector([3.009, -6.172, 3.692, -2.51])
+vecfb = Vector([6.404, -9.144, 2.759, 8.718])
+
+print ('\nd',vecdv.component_parallel_to(vecdb))
+vecee = vecev.component_parallel_to(veceb)
+print ('\ne',vecev.component_orthogonal_to(vecee))
+vecfe = vecfv.component_parallel_to(vecfb)
+print ('\nfp',vecfe)
+print ('\nfo',vecfv.component_orthogonal_to(vecfe))
