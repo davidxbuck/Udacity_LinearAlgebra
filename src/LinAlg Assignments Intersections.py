@@ -1,8 +1,8 @@
-from line import Line
-from linsys import LinearSystem
-from plane import Plane
-from vector import Vector
-from hyperplane import Hyperplane
+from src.line import Line
+from src.linsys import LinearSystem
+from src.plane import Plane
+from src.vector import Vector
+from src.hyperplane import Hyperplane
 
 answers = []
 

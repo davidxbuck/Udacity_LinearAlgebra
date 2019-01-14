@@ -1,9 +1,8 @@
 from copy import deepcopy
 from decimal import Decimal, getcontext
 
-from plane import Plane
-from hyperplane import Hyperplane
-from vector import Vector
+from src.hyperplane import Hyperplane
+from src.vector import Vector
 
 getcontext().prec = 15
 

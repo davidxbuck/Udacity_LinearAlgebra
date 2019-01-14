@@ -1,5 +1,4 @@
-import pytest
-from vector import Vector
+from src.vector import Vector
 x1 = Vector([8.218, -9.341])
 y1 = Vector([-1.129, 2.111])
 x2 = Vector([7.119, 8.215])
